@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Sign up Form Modal</title>
+        <title>Sign upj Form Modal</title>
       </Head>
       <LoginForm />
     </div>

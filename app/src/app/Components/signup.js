@@ -1,23 +1,128 @@
 'use client';
 import React, { useState } from 'react';
-import { Modal, Box, Typography, Button, Grid, Input, InputAdornment, IconButton, FormControl, InputLabel, FormGroup,Link, FormLabel } from '@mui/material';
+import { Modal, Box, Typography, Button, Grid, Input, InputAdornment, IconButton, FormControl, InputLabel, FormGroup, Link, FormLabel } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { red,pink } from '@mui/material/colors';
+import { red } from '@mui/material/colors';
 import Checkbox from '@mui/material/Checkbox';
 import styles from "../styles/Login.module.scss";
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import { signUp } from '../api/auth';
 
-export default function InputAdornments() {
+export default function SignUpModal() {
   const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  
+    resetForm();
+  };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    switch (name) {
+      case 'firstName':
+        setFirstName(value);
+        setFirstNameError(validateFirstName(value) ? '' : 'First name should have at least 3 characters');
+        break;
+      case 'lastName':
+        setLastName(value);
+        setLastNameError(validateLastName(value) ? '' : 'Last name should have at least 3 characters');
+        break;
+      case 'username':
+        setUsername(value);
+        setUsernameError(validateUsername(value) ? '' : 'Username should have at least 4 characters');
+        break;
+      case 'email':
+        setEmail(value);
+        setEmailError(validateEmail(value) ? '' : 'Email should have at least 4 characters');
+        break;
+      case 'password':
+        setPassword(value);
+        setPasswordError(validatePassword(value) ? '' : 'Password should have a length of 8 to 15 characters, including capital & lowercase letters, numbers, & symbols');
+        break;
+      case 'confirmPassword':
+        setConfirmPassword(value);
+        setConfirmPasswordError(value === password ? '' : 'Passwords do not match');
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleSignUp = (event) => {
+    event.preventDefault();
+
+    
+    const isValid =
+      validateFirstName(firstName) &&
+      validateLastName(lastName) &&
+      validateUsername(username) &&
+      validateEmail(email) &&
+      validatePassword(password) &&
+      validateConfirmPassword(confirmPassword);
+
+    if (isValid) {
+     
+      const response = signUp(email, password);
+      setMessage(response.message);
+    }
+  };
+
+  const resetForm = () => {
+    setFirstName('');
+    setLastName('');
+    setUsername('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setMessage('');
+  };
+
+  const validateFirstName = (value) => {
+    return value.length >= 3;
+  };
+
+  const validateLastName = (value) => {
+    return value.length >= 3;
+  };
+
+  const validateUsername = (value) => {
+    return value.length >= 4;
+  };
+
+  const validateEmail = (value) => {
+    return value.length >= 4;
+  };
+
+  const validatePassword = (value) => {
+   
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/;
+    return passwordRegex.test(value);
+  };
+
+  const validateConfirmPassword = (value) => {
+    return value === password;
   };
 
   return (
@@ -35,24 +140,32 @@ export default function InputAdornments() {
           />
           <Typography variant="h6" className={styles.messageBox}>Sign up</Typography>
 
-          <form>
+          <form onSubmit={handleSignUp}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <FormControl fullWidth sx={{ m: 1 }} variant="standard">
                   <InputLabel className={styles.TextFieldText}>First Name</InputLabel>
                   <Input
                     className={styles.TextFieldText0}
-                    type={'text'}
+                    type='text'
+                    name='firstName'
+                    value={firstName}
+                    onChange={handleInputChange}
                   />
+                  {firstNameError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{firstNameError}</Typography>}
                 </FormControl>
               </Grid>
               <Grid item xs={6}>
                 <FormControl fullWidth sx={{ m: 1 }} variant="standard">
                   <InputLabel className={styles.TextFieldText}>Last Name</InputLabel>
                   <Input
-                    className={styles.TextFieldText}
-                    type={'text'}
+                    className={styles.TextFieldText0}
+                    type='text'
+                    name='lastName'
+                    value={lastName}
+                    onChange={handleInputChange}
                   />
+                  {lastNameError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{lastNameError}</Typography>}
                 </FormControl>
               </Grid>
             </Grid>
@@ -60,24 +173,36 @@ export default function InputAdornments() {
             <FormControl fullWidth sx={{ m: 1 }} variant="standard">
               <InputLabel className={styles.TextFieldText}>Username</InputLabel>
               <Input
-                className={styles.TextFieldText}
-                type={'text'}
+                className={styles.TextFieldText0}
+                type='text'
+                name='username'
+                value={username}
+                onChange={handleInputChange}
               />
+              {usernameError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{usernameError}</Typography>}
             </FormControl>
 
             <FormControl fullWidth sx={{ m: 1 }} variant="standard">
               <InputLabel className={styles.TextFieldText}>Email</InputLabel>
               <Input
-                className={styles.TextFieldText}
-                type={'email'}
+                className={styles.TextFieldText0}
+                type='email'
+                name='email'
+                value={email}
+                onChange={handleInputChange}
               />
+              {emailError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{emailError}</Typography>}
             </FormControl>
 
             <FormControl fullWidth sx={{ m: 1 }} variant="standard">
               <InputLabel className={styles.TextFieldText} htmlFor="password">Password</InputLabel>
               <Input
+                className={styles.TextFieldText0}
                 id="password"
                 type={showPassword ? 'text' : 'password'}
+                name='password'
+                value={password}
+                onChange={handleInputChange}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -91,13 +216,18 @@ export default function InputAdornments() {
                   </InputAdornment>
                 }
               />
+              {passwordError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{passwordError}</Typography>}
             </FormControl>
 
             <FormControl fullWidth sx={{ m: 1 }} variant="standard">
               <InputLabel className={styles.TextFieldText} htmlFor="confirm-password">Confirm Password</InputLabel>
               <Input
+                className={styles.TextFieldText0}
                 id="confirm-password"
                 type={showPassword ? 'text' : 'password'}
+                name='confirmPassword'
+                value={confirmPassword}
+                onChange={handleInputChange}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -111,42 +241,38 @@ export default function InputAdornments() {
                   </InputAdornment>
                 }
               />
+              {confirmPasswordError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{confirmPasswordError}</Typography>}
             </FormControl>
 
-            
-              <FormGroup aria-label="position" row>
+            <FormGroup aria-label="position" row>
               <Checkbox
-  
-  defaultChecked
-  sx={{
-    color: red[800],
-    '&.Mui-checked': {
-      color: red[600],
-    },
-  }}
-  />
-               <FormLabel className={styles.TextFieldText2}>Agreeing to MAVEN X's Terms of Service & acknowledging our privacy notice applies</FormLabel>
-              </FormGroup>
+                defaultChecked
+                sx={{
+                  color: red[800],
+                  '&.Mui-checked': {
+                    color: red[600],
+                  },
+                }}
+              />
+              <FormLabel className={styles.TextFieldText2}>Agreeing to MAVEN X's Terms of Service & acknowledging our privacy notice applies</FormLabel>
+            </FormGroup>
 
-
-
-          <Box className={styles.buttonVala}>
-
-            <Button type="submit" variant="contained" color="primary">
-              Register
-            </Button>
+            <Box className={styles.buttonVala}>
+              <Button type="submit" variant="contained" color="primary">
+                Register
+              </Button>
             </Box>
 
+            {message && <Typography className={styles.messageBox}>{message}</Typography>}
+
             <Box className={styles.lastText}>
-              <FormLabel className={styles.TextFieldText3} variant='paragraph' >Already Signed up To MAVEN X?</FormLabel>
+              <FormLabel className={styles.TextFieldText3} variant='paragraph'>Already Signed up To MAVEN X?</FormLabel>
               <Link className={styles.TextFieldText4} href='/login'>Login in
-              <ArrowRightAltIcon sx={{ color: red[500] }} />
+                <ArrowRightAltIcon sx={{ color: red[500] }} />
               </Link>
             </Box>
           </form>
         </Box>
-
-
       </Modal>
     </div>
   );
