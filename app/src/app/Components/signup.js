@@ -1,3 +1,4 @@
+// components/SignUpModal.js
 'use client';
 import React, { useState } from 'react';
 import { Modal, Box, Typography, Button, Grid, Input, InputAdornment, IconButton, FormControl, InputLabel, FormGroup, Link, FormLabel } from '@mui/material';
@@ -28,7 +29,6 @@ export default function SignUpModal() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-  
     resetForm();
   };
 
@@ -70,10 +70,8 @@ export default function SignUpModal() {
     }
   };
 
-  const handleSignUp = (event) => {
+  const handleSignUp = async (event) => {
     event.preventDefault();
-
-    
     const isValid =
       validateFirstName(firstName) &&
       validateLastName(lastName) &&
@@ -83,8 +81,7 @@ export default function SignUpModal() {
       validateConfirmPassword(confirmPassword);
 
     if (isValid) {
-     
-      const response = signUp(email, password);
+      const response = await signUp(email, password);
       setMessage(response.message);
     }
   };
@@ -99,47 +96,34 @@ export default function SignUpModal() {
     setMessage('');
   };
 
-  const validateFirstName = (value) => {
-    return value.length >= 3;
-  };
-
-  const validateLastName = (value) => {
-    return value.length >= 3;
-  };
-
-  const validateUsername = (value) => {
-    return value.length >= 4;
-  };
-
-  const validateEmail = (value) => {
-    return value.length >= 4;
-  };
-
+  const validateFirstName = (value) => 
+    value.length >= 3;
+  const validateLastName = (value) => 
+    value.length >= 3;
+  const validateUsername = (value) => 
+    value.length >= 4;
+  const validateEmail = (value) => 
+    value.length >= 4;
   const validatePassword = (value) => {
-   
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/;
-    return passwordRegex.test(value);
+    const passwordCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/;
+    return passwordCheck.test(value);
   };
-
-  const validateConfirmPassword = (value) => {
-    return value === password;
-  };
+  const validateConfirmPassword = (value) => value === password;
 
   return (
     <div>
       <Button variant="contained" color="primary" onClick={handleOpen}>
         Open Modal
       </Button>
-
       <Modal open={open} onClose={handleClose} className={styles.modalBox}>
-        <Box>
+        <Box className={styles.imageBox}>
           <img 
-            src='/images/eabe799dda574f628ac4d98cd0526139.png' 
+            src='/images/7347ea91-0e8d-4311-b535-c49cea392138-cover-removebg-preview.png' 
             alt="Example Image" 
             className={styles.image}
           />
           <Typography variant="h6" className={styles.messageBox}>Sign up</Typography>
-
+          {message && <Typography variant="body2" color="error">{message}</Typography>}
           <form onSubmit={handleSignUp}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -169,7 +153,6 @@ export default function SignUpModal() {
                 </FormControl>
               </Grid>
             </Grid>
-
             <FormControl fullWidth sx={{ m: 1 }} variant="standard">
               <InputLabel className={styles.TextFieldText}>Username</InputLabel>
               <Input
@@ -181,7 +164,6 @@ export default function SignUpModal() {
               />
               {usernameError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{usernameError}</Typography>}
             </FormControl>
-
             <FormControl fullWidth sx={{ m: 1 }} variant="standard">
               <InputLabel className={styles.TextFieldText}>Email</InputLabel>
               <Input
@@ -193,12 +175,10 @@ export default function SignUpModal() {
               />
               {emailError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{emailError}</Typography>}
             </FormControl>
-
             <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-              <InputLabel className={styles.TextFieldText} htmlFor="password">Password</InputLabel>
+              <InputLabel className={styles.TextFieldText}>Password</InputLabel>
               <Input
                 className={styles.TextFieldText0}
-                id="password"
                 type={showPassword ? 'text' : 'password'}
                 name='password'
                 value={password}
@@ -206,7 +186,7 @@ export default function SignUpModal() {
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
-                      className={styles.TextFieldText}
+                        className={styles.TextFieldText0}
                       aria-label="toggle password visibility"
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
@@ -218,20 +198,18 @@ export default function SignUpModal() {
               />
               {passwordError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{passwordError}</Typography>}
             </FormControl>
-
             <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-              <InputLabel className={styles.TextFieldText} htmlFor="confirm-password">Confirm Password</InputLabel>
+              <InputLabel className={styles.TextFieldText}>Confirm Password</InputLabel>
               <Input
                 className={styles.TextFieldText0}
-                id="confirm-password"
                 type={showPassword ? 'text' : 'password'}
                 name='confirmPassword'
                 value={confirmPassword}
                 onChange={handleInputChange}
                 endAdornment={
                   <InputAdornment position="end">
-                    <IconButton
-                      className={styles.TextFieldText}
+                    <IconButton 
+                    className={styles.TextFieldText0}
                       aria-label="toggle password visibility"
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
@@ -243,37 +221,38 @@ export default function SignUpModal() {
               />
               {confirmPasswordError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{confirmPasswordError}</Typography>}
             </FormControl>
+              <FormGroup aria-label="position" row>
+                <Checkbox
+                  defaultChecked
+                  sx={{
+                    color: red[800],
+                    '&.Mui-checked': {
+                      color: red[600],
+                    },
+                  }}
+                />
+                <FormLabel className={styles.TextFieldText2}>Agreeing to SK's Gaming Arena Terms of Service & Acknowledging Our Privacy Notice Applies</FormLabel>
+              </FormGroup>
 
-            <FormGroup aria-label="position" row>
-              <Checkbox
-                defaultChecked
-                sx={{
-                  color: red[800],
-                  '&.Mui-checked': {
-                    color: red[600],
-                  },
-                }}
-              />
-              <FormLabel className={styles.TextFieldText2}>Agreeing to MAVEN X's Terms of Service & acknowledging our privacy notice applies</FormLabel>
-            </FormGroup>
+              <Box className={styles.buttonVala}>
+                <Button type="submit" variant="contained" color="primary">
+                  Register
+                </Button>
+              </Box>
 
-            <Box className={styles.buttonVala}>
-              <Button type="submit" variant="contained" color="primary">
-                Register
-              </Button>
-            </Box>
+           
 
-            {message && <Typography className={styles.messageBox}>{message}</Typography>}
+              <Box className={styles.lastText}>
+                <FormLabel className={styles.TextFieldText3} variant='paragraph'>Already Signed up To Sk's Gaming Arena?</FormLabel>
+                <Link className={styles.TextFieldText4}  href='/login'>Login in
+                  <ArrowRightAltIcon sx={{ color: red[500] }} />
+                </Link>
+              </Box>
+            </form>
+          </Box>
+        </Modal>
+      </div>
+    );
+  }
 
-            <Box className={styles.lastText}>
-              <FormLabel className={styles.TextFieldText3} variant='paragraph'>Already Signed up To MAVEN X?</FormLabel>
-              <Link className={styles.TextFieldText4} href='/login'>Login in
-                <ArrowRightAltIcon sx={{ color: red[500] }} />
-              </Link>
-            </Box>
-          </form>
-        </Box>
-      </Modal>
-    </div>
-  );
-}
+

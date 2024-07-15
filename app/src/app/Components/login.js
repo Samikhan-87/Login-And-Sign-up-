@@ -8,15 +8,21 @@ import styles from "../styles/Signup.module.scss";
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { login } from '../api/auth';
 
-export default function InputAdornments() {
+
+export default function LoginModal() {
   const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    resetForm();
+  };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -24,10 +30,42 @@ export default function InputAdornments() {
     event.preventDefault();
   };
 
-  const handleLogin = (event) => {
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    switch (name) {
+      case 'email':
+        setEmail(value);
+        setEmailError(validateEmail(value) ? '' : 'Email should have at least 4 characters');
+        break;
+      case 'password':
+        setPassword(value);
+        setPasswordError(validatePassword(value) ? '' : 'Password should have a length of 8 to 15 characters, including capital & lowercase letters, numbers, & symbols');
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleLogin = async (event) => {
     event.preventDefault();
-    const response = login(email, password);
-    setMessage(response.message);
+    const isValid = validateEmail(email) && validatePassword(password);
+
+    if (isValid) {
+      const response = await login(email, password);
+      setMessage(response.message);
+    }
+  };
+
+  const resetForm = () => {
+    setEmail('');
+    setPassword('');
+    setMessage('');
+  };
+
+  const validateEmail = (value) => value.length >= 4;
+  const validatePassword = (value) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/;
+    return passwordRegex.test(value);
   };
 
   return (
@@ -39,7 +77,7 @@ export default function InputAdornments() {
       <Modal open={open} onClose={handleClose} className={styles.modalBox}>
         <Box>
           <img 
-            src='/images/eabe799dda574f628ac4d98cd0526139.png' 
+            src='/images/7347ea91-0e8d-4311-b535-c49cea392138-cover-removebg-preview.png' 
             alt="Example Image" 
             className={styles.image}
           />
@@ -52,23 +90,27 @@ export default function InputAdornments() {
               <InputLabel className={styles.TextFieldText}>Username or Email</InputLabel>
               <Input
                 className={styles.TextFieldText0}
-                type="text"
+                type='email'
+                name='email'
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleInputChange}
               />
+                {emailError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{emailError}</Typography>}
             </FormControl>
+            
 
             <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-              <InputLabel className={styles.TextFieldText} htmlFor="password">Password</InputLabel>
-              <Input 
-                id="password"
+              <InputLabel className={styles.TextFieldText}>Password</InputLabel>
+              <Input
+                className={styles.TextFieldText0}
                 type={showPassword ? 'text' : 'password'}
+                name='password'
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleInputChange}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
-                      className={styles.TextFieldText}
+                              className={styles.TextFieldText0}
                       aria-label="toggle password visibility"
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
@@ -78,6 +120,7 @@ export default function InputAdornments() {
                   </InputAdornment>
                 }
               />
+              {passwordError && <Typography className={styles.errorText} style={{ color: red[500], fontSize: '12px' }}>{passwordError}</Typography>}
             </FormControl>
 
             <Box className={styles.ForgetText}>
@@ -96,9 +139,9 @@ export default function InputAdornments() {
                 Login
               </Button>
             </Box>
-
+           
             <Box className={styles.lastText}>
-              <FormLabel className={styles.TextFieldText3} variant='paragraph'>Still not signed up to MAVEN X</FormLabel>
+              <FormLabel className={styles.TextFieldText3} variant='paragraph'>Still not signed up to SK's Gaming Arena</FormLabel>
               <Link className={styles.TextFieldText4} href='/'>Sign up
                 <ArrowRightAltIcon sx={{ color: red[500] }} />
               </Link>

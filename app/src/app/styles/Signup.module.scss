@@ -1,88 +1,84 @@
 .modalBox {
-    // position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 450px;
-    height: 450px;
-    box-shadow: 24;
-    padding: 0px 30px 20px 30px;
-    background-color: #2f2d2d;
+  // position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  height: 550px;
+  box-shadow: 24;
+  padding: 0px 30px 20px 30px;
+  background-color: #2f2d2d;
+  border-radius: 4px;
+  
+.image{
+  margin-left: 80px;
+  width: 250px;
+}
+  .messageBox {
+    color: white;
+    padding: 8px;
+    margin-bottom: 16px;
     border-radius: 4px;
+    text-align: center;
+  }
+  //   button{
+  //     margin-top: 100px;
+  //   }
+  .TextFieldText {
+    color: white;
+  }
+  .TextFieldText0 {
+    color: #b40004;
+  }
+  .mainBox {
+    display: flex;
+    flex-direction: row;
 
-    .messageBox {
-        color: white;
-        padding: 8px;
-        margin-bottom: 16px;
-        border-radius: 4px;
-        text-align: center;
-      }
-    //   button{
-    //     margin-top: 100px;
-    //   }
-      .TextFieldText{
-        color: white;
-
-      }
-      .TextFieldText0{
-        color: #b40004;
-
-      }
-      .mainBox{
-        display: flex;
-        flex-direction: row;
-        
-        .childBox{
-            margin-top: 100px;
-        }
+    .childBox {
+      margin-top: 100px;
     }
-      .TextFieldText2{
-        color: white;
-        text-align: center;
-        font-size: 15px;
-        margin-top: 10px;
-      }
-      .lastText{
-margin-top: 15px;
-text-align: center;
-      .TextFieldText3{
-        color: white;
-        font-size: 15px;
-
-      }
-      .TextFieldText4{
-        color: #ffff;
-        font-size: 15px;
-        margin-left: 10px;
-        text-decoration: none;
-
-      }
-      .TextFieldText4:hover{
-              color: #b72126;
-              text-decoration: underline;
-      }
+  }
+  .TextFieldText2 {
+    color: white;
+    text-align: center;
+    font-size: 15px;
+    margin-top: 10px;
+  }
+  .lastText {
+    margin-top: 15px;
+    text-align: center;
+    .TextFieldText3 {
+      color: white;
+      font-size: 15px;
     }
-     .buttonVala{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 20px;
-      Button{
-        background-color: #b72126;
-        width: 200px;
-      }
-     }
-     .ForgetText{
-        margin-top: 5px;
-        margin-left: 240px;
-        text-align: center;
-              .ForgetTextL{
-                color: white;
-                font-size: 15px;
-              }
-   
+    .TextFieldText4 {
+      color: #ffff;
+      font-size: 15px;
+      margin-left: 10px;
+      text-decoration: none;
+    }
+    .TextFieldText4:hover {
+      color: #b72126;
+      text-decoration: underline;
+    }
+  }
+  .buttonVala {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    Button {
+      background-color: #b72126;
+      width: 200px;
+    }
+  }
+  .ForgetText {
+    margin-top: 5px;
+    margin-left: 240px;
+    text-align: center;
+    .ForgetTextL {
+      color: white;
+      font-size: 15px;
+    }
   }
 }
-  
-
-  
